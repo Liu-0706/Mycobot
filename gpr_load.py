@@ -11,7 +11,7 @@ def predict_angles(xyz_target):
     return predicted
 
 # 示例目标点
-target_xyz = [205, 20, 140]
+target_xyz = [200, 20, 140]
 angles = predict_angles(target_xyz)
 
 print("angles:", angles)
