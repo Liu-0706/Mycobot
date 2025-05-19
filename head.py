@@ -31,7 +31,7 @@ def save(end_coords, actual_end_coords, angles):
         writer = csv.writer(f)
         writer.writerow(data)
 
-def add_jitter(coords, max_jitter=10):
+def add_jitter(coords, max_jitter=20):
     return [coord + random.uniform(-max_jitter,max_jitter) for coord in coords]
 
 def random_end(end = [200,20,140,0,180,180], max_jitter=10):
