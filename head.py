@@ -3,6 +3,9 @@ import time
 import math
 import csv
 import random
+import joblib
+import numpy as np
+
 
 mc = MyCobot('/dev/ttyAMA0', 1000000)
 
@@ -15,9 +18,9 @@ def close():
 def initialize():
     mc.power_on()
     if mc.is_controller_connected():
-        print("myCobot 280 已连接")
+        print("myCobot 280 connected")
     else:
-        print("无法连接到myCobot 280，请检查端口或连接方式")
+        print("unable to connect myCobot 280")
         return False
     return True
 
@@ -35,3 +38,9 @@ def random_end(end = [200,20,140,0,180,180], max_jitter=10):
     return [200 + random.uniform(-max_jitter,max_jitter),20,140,0,180,180]
     #end[0] +=  random.uniform(-max_jitter,max_jitter)
     #eturn end
+
+def predict_angles(xyz_target):
+    models = [joblib.load(f"gpr_models/gpr_joint{i+1}.pkl") for i in range(6)]
+    input_feat = np.array(xyz_target).reshape(1, -1)
+    predicted = [model.predict(input_feat)[0] for model in models]
+    return predicted
