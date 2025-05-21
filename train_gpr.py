@@ -4,9 +4,12 @@ import joblib
 import os
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, WhiteKernel
+<<<<<<< HEAD
 import sklearn
 
 print(sklearn.__version__)
+=======
+>>>>>>> Add files manually copied into repo
 
 CSV_FILE = "data.csv"
 MODEL_DIR = "gpr_models"

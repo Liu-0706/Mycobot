@@ -24,10 +24,10 @@ def initialize():
 def save(end_coords, actual_end_coords, angles):
     data = end_coords[:3] + actual_end_coords[:3] + angles
     print("data",data)
-    save_csv(data)
+    save_csv(data,"data.csv")
 
-def save_csv(data):
-    with open("data.csv","a",newline = "") as f:
+def save_csv(data,data_name):
+    with open(data_name,"a",newline = "") as f:
         writer = csv.writer(f)
         writer.writerow(data)
 
@@ -43,10 +43,15 @@ def random_end(end = [200,20,140,0,180,180], max_jitter=10):
 def linear_interp(start, end, ratio):
     return [s + (e - s) * ratio for s, e in zip(start, end)]
 
-def record_trajectory(start, end, steps=20, interval=0.1):
+def record_trajectory(start, end, steps=15, interval=0.1):
     # Move to start
-    mc.send_coords(start, 50, 1)
-    time.sleep(2)
+    start[2] += 30
+    mc.send_coords(start, 40, 1)
+    time.sleep(3)
+    start[2] -= 30
+    mc.send_coords(start, 20, 1)
+    time.sleep(1)
+
     mc.send_coords(end, 20, 1)
     data = []
 
@@ -63,4 +68,8 @@ def record_trajectory(start, end, steps=20, interval=0.1):
         data.append(row)
 
         time.sleep(interval)
-    save_csv(data)
+
+    end[2] += 30
+    mc.send_coords(end, 20, 1)
+    time.sleep(2)
+    save_csv(data,"data_new.csv")

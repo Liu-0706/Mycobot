@@ -13,10 +13,12 @@ mc = MyCobot('/dev/ttyAMA0', 1000000)
 
 initialize()
 
-start_coords = [120, 20, 140, 0, 180, 180]
-end_coords = [200, 20, 140, 0, 180, 180]
+start_coords = [200, 100, 140, 0, 180, 180]
+end_coords = [200, -100, 140, 0, 180, 180]
 
 head.record_trajectory(start_coords,end_coords)
+print("end data_collection.py")
+close()
 
 """
 def shake(start_coords, end_coords):

@@ -5,7 +5,10 @@ import numpy as np
 models = [joblib.load(f"gpr_models/gpr_joint{i+1}.pkl") for i in range(6)]
 
 def predict_angles(xyz_target):
+<<<<<<< HEAD
     """输入目标点 [x, y, z]，返回预测的6个关节角度列表"""
+=======
+>>>>>>> Add files manually copied into repo
     input_feat = np.array(xyz_target).reshape(1, -1)
     predicted = [model.predict(input_feat)[0] for model in models]
     return predicted
