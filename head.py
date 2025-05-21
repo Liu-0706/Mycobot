@@ -34,8 +34,11 @@ def save_csv(data,data_name):
 def add_jitter(coords, max_jitter=10):
     return [coord + random.uniform(-max_jitter,max_jitter) for coord in coords]
 
-def random_end(end = [200,20,140,0,180,180], max_jitter=10):
-    return [200 + random.uniform(-max_jitter,max_jitter),20,140,0,180,180]
+def random_point(point, max_jitter=10):
+    point[0] += random.uniform(-max_jitter,max_jitter)
+    point[1] += random.uniform(-max_jitter,max_jitter)
+    print("point",point)
+    return point
     #end[0] +=  random.uniform(-max_jitter,max_jitter)
     #eturn end
 
@@ -45,12 +48,12 @@ def linear_interp(start, end, ratio):
 
 def record_trajectory(start, end, steps=15, interval=0.1):
     # Move to start
-    start[2] += 30
+    start[2] += 40
     mc.send_coords(start, 40, 1)
     time.sleep(3)
-    start[2] -= 30
+    start[2] -= 40
     mc.send_coords(start, 20, 1)
-    time.sleep(1)
+    time.sleep(3)
 
     mc.send_coords(end, 20, 1)
     data = []
@@ -69,7 +72,7 @@ def record_trajectory(start, end, steps=15, interval=0.1):
 
         time.sleep(interval)
 
-    end[2] += 30
+    end[2] += 40
     mc.send_coords(end, 20, 1)
     time.sleep(2)
     save_csv(data,"data_new.csv")

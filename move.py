@@ -14,8 +14,8 @@ initialize()
 
 # 定义初始点和目标点
 start_coords = [120, 20, 140, 0, 180, 180]
-#end_coords = [200, 20, 140, 0, 180, 180]
-end_coords = random_end()
+end_coords = [200, 20, 140, 0, 180, 180]
+end_coords = random_point(end_coords)
 print("end_coords",end_coords)
 
 join_data = []

@@ -14,9 +14,9 @@ mc = MyCobot('/dev/ttyAMA0', 1000000)
 initialize()
 
 start_coords = [120, 20, 140, 0, 180, 180]
-#end_coords = [200, 20, 140, 0, 180, 180]
+end_coords = [200, 20, 140, 0, 180, 180]
 
-end_coords = random_end()
+end_coords = random_point(end_coords)
 print("end_coords",end_coords)
 end_coords = add_jitter(end_coords)
 print("end_coords_jitter",end_coords)
