@@ -2,6 +2,7 @@ from pymycobot.mycobot import MyCobot
 import time
 import math
 import random
+import head
 from head import close
 from head import save
 from head import initialize
@@ -13,8 +14,11 @@ mc = MyCobot('/dev/ttyAMA0', 1000000)
 initialize()
 
 start_coords = [120, 20, 140, 0, 180, 180]
-#end_coords = [200, 20, 140, 0, 180, 180]
+end_coords = [200, 20, 140, 0, 180, 180]
 
+head.record_trajectory(start_coords,end_coords)
+
+"""
 def shake(start_coords, end_coords):
     jitter_coodrs = add_jitter(end_coords)
 
@@ -35,5 +39,4 @@ for _ in range(10):
         shake(start_coords, end_coords)
 print("end shake.py")
 close()
-
-
+"""
