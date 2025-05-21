@@ -71,7 +71,7 @@ def record_trajectory(start, end, steps=15, interval=0.1):
         data.append(row)
 
         time.sleep(interval)
-
+    end[0] += 20
     end[2] += 40
     mc.send_coords(end, 20, 1)
     time.sleep(2)
