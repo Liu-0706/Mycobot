@@ -3,29 +3,24 @@ import time
 import math
 import random
 import head
-from head import close
-from head import save
-from head import initialize
-from head import add_jitter
-from head import random_point
 
 mc = MyCobot('/dev/ttyAMA0', 1000000)
 
-initialize()
+head.initialize()
 
 for _ in range(200):
     start_coords = [200, 100, 140, 0, 180, 180]
-    start_coords = random_point(start_coords)
+    start_coords = head.random_point(start_coords)
     print("start_coords",start_coords)
 
     end_coords = [200, -100, 140, 0, 180, 180]
-    end_coords = random_point(end_coords)
+    end_coords = head.random_point(end_coords)
     print("end_coords",end_coords)
 
     head.record_trajectory(start_coords,end_coords)
 
 print("end data_collection.py")
-close()
+head.close()
 
 """
 def shake(start_coords, end_coords):

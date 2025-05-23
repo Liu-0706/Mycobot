@@ -2,23 +2,18 @@ from pymycobot.mycobot import MyCobot
 import time
 import math
 import random
-from head import close
-from head import save
-from head import initialize
-from head import add_jitter
-from head import random_end
-from head import predict_angles
+import head
 
 mc = MyCobot('/dev/ttyAMA0', 1000000)
 
-initialize()
+head.initialize()
 
 start_coords = [120, 20, 140, 0, 180, 180]
 end_coords = [200, 20, 140, 0, 180, 180]
 
-end_coords = random_point(end_coords)
+end_coords = head.random_point(end_coords)  #x和y随机添加参数，生成随机终点
 print("end_coords",end_coords)
-end_coords = add_jitter(end_coords)
+end_coords = head.add_jitter(end_coords)
 print("end_coords_jitter",end_coords)
 
 def shake(start_coords, end_coords):
@@ -38,7 +33,7 @@ def shake(start_coords, end_coords):
 
 
 def shake_with_gpr(start_coords, end_coords):
-    end_angles = predict_angles(end_coords[:3])
+    end_angles = head.predict_angles(end_coords[:3])
     print("end_angles",end_angles)
     start_coords[2] += 30
     mc.send_coords(start_coords, 40, 1)
@@ -55,6 +50,6 @@ shake(start_coords, end_coords)
 shake_with_gpr(start_coords, end_coords)
 
 print("end shake.py")
-close()
+head.close()
 
 

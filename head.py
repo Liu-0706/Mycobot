@@ -15,9 +15,9 @@ def close():
 def initialize():
     mc.power_on()
     if mc.is_controller_connected():
-        print("myCobot 280 已连接")
+        print("myCobot 280 is connected")
     else:
-        print("无法连接到myCobot 280，请检查端口或连接方式")
+        print("unable to connect myCobot 280")
         return False
     return True
 
