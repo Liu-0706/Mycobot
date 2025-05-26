@@ -1,3 +1,5 @@
 git add .
 git commit -m "Add files manually copied into repo"
 git push origin main
+
+git clone --depth 1 https://github.com/Liu-0706/Mycobot.git
