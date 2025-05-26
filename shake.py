@@ -23,6 +23,11 @@ time.sleep(2)
 mc.send_coords(start_coords, 20, 1)
 time.sleep(2)
 
+def is_angles_close(target_angles, threshold=2.0):
+    current_angles = mc.get_angles()
+    diffs = [abs(c - t) for c, t in zip(current_angles, target_angles)]
+    return all(d < threshold for d in diffs)
+
 # 动态绘制并补偿
 steps = 100
 prev_angles = mc.get_angles()
@@ -46,18 +51,19 @@ for i in range(steps):
     mc.send_angles(smoothed_angles, 40)
     prev_angles = smoothed_angles
 
-    # 动态等待直到基本到位
-    while not head.is_in_position(smoothed_angles):
+    # 使用自定义判断是否接近目标角度
+    while not is_angles_close(smoothed_angles):
         time.sleep(0.01)
 
 # 提笔动作
 final = end_coords[:]
 final[2] += 30
 mc.send_coords(final, 20, 1)
-while not mc.is_in_position(final, 2):
+while not is_angles_close(mc.get_coords()[:6]):
     time.sleep(0.01)
 
 head.close()
+
 
 
 """
