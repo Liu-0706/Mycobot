@@ -30,8 +30,6 @@ def is_angles_close(target_angles, threshold=2.0):
 
 # 动态绘制并补偿
 steps = 100
-prev_angles = mc.get_angles()
-alpha = 0.7  # 平滑系数
 
 for i in range(steps):
     ratio = i / steps
@@ -40,26 +38,18 @@ for i in range(steps):
     error = [a - t for a, t in zip(actual[:3], target)]
 
     features = np.array(target + error).reshape(1, -1)
-    raw_angles = [model.predict(features)[0] for model in gpr_models]
+    angles = [model.predict(features)[0] for model in gpr_models]
 
-    # 平滑处理角度输出
-    smoothed_angles = [
-        alpha * new + (1 - alpha) * old
-        for new, old in zip(raw_angles, prev_angles)
-    ]
+    mc.send_angles(angles, 40)
 
-    mc.send_angles(smoothed_angles, 40)
-    prev_angles = smoothed_angles
-
-    # 使用自定义判断是否接近目标角度
-    while not is_angles_close(smoothed_angles):
+    while not is_angles_close(angles):
         time.sleep(0.01)
 
 # 提笔动作
 final = end_coords[:]
 final[2] += 30
 mc.send_coords(final, 20, 1)
-while not is_angles_close(mc.get_coords()[:6]):
+while not is_angles_close(mc.get_angles()):
     time.sleep(0.01)
 
 head.close()
