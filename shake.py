@@ -42,7 +42,7 @@ for _ in range(6):
     kf_list.append(kf)
 
 # 动态绘制
-steps = 100
+steps = 50
 
 for i in range(steps):
     ratio = i / steps
@@ -62,14 +62,10 @@ for i in range(steps):
         filtered_angles.append(kf.x[0, 0])
 
     angles_rad = degrees_to_radians(filtered_angles)
-    mc.send_radians(angles_rad, 40)
-    time.sleep(0.05)
+    mc.send_radians(angles_rad, 20)
+    #time.sleep(0.01)
 
-# 提笔动作
-final = end_coords[:]
-final[2] += 30
-mc.send_coords(final, 20, 1)
-time.sleep(2)
+
 
 head.close()
 

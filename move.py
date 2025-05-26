@@ -18,31 +18,31 @@ print("end_coords",end_coords)
 """
 
 start_coords = [200, 100, 140, 0, 180, 180]
-start_coords = head.random_point(start_coords)
+#start_coords = head.random_point(start_coords)
 print("start_coords",start_coords)
 
 end_coords = [200, -100, 140, 0, 180, 180]
-end_coords = head.random_point(end_coords)
+#end_coords = head.random_point(end_coords)
 print("end_coords",end_coords)
 
 join_data = []
 
-head.record_trajectory(start_coords,end_coords)
+#head.record_trajectory(start_coords,end_coords)
 
 
-"""
+
 # 1. 移动到初始点
 mc.send_coords(start_coords, 50, 1)
-time.sleep(2)
+time.sleep(3)
 
 mc.send_coords(end_coords, 20, 1)
-time.sleep(2)
+time.sleep(3)
 
 actual_end_coords = mc.get_coords()
 angles = mc.get_angles()
 
-save(end_coords, actual_end_coords, angles)
-"""
+#save(end_coords, actual_end_coords, angles)
+
 print("end move.py")
 head.close()
 
