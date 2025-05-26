@@ -47,7 +47,7 @@ for i in range(steps):
     prev_angles = smoothed_angles
 
     # 动态等待直到基本到位
-    while not mc.is_in_position(smoothed_angles, 2):
+    while not head.is_in_position(smoothed_angles):
         time.sleep(0.01)
 
 # 提笔动作

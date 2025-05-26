@@ -76,3 +76,8 @@ def record_trajectory(start, end, steps=15, interval=0.1):
     mc.send_coords(end, 20, 1)
     time.sleep(2)
     save_csv(data,"data_new.csv")
+
+def is_angles_close(target_angles, threshold=2.0):
+    current_angles = mc.get_angles()
+    diffs = [abs(c - t) for c, t in zip(current_angles, target_angles)]
+    return all(d < threshold for d in diffs)
