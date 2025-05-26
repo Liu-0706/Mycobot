@@ -1,8 +1,9 @@
-# shake_dynamic.py
+# shake_dynamic_radians.py
 from pymycobot.mycobot import MyCobot
 import time
 import joblib
 import numpy as np
+import math
 import head
 
 mc = MyCobot('/dev/ttyAMA0', 1000000)
@@ -23,13 +24,12 @@ time.sleep(2)
 mc.send_coords(start_coords, 20, 1)
 time.sleep(2)
 
-def is_angles_close(target_angles, threshold=2.0):
-    current_angles = mc.get_angles()
-    diffs = [abs(c - t) for c, t in zip(current_angles, target_angles)]
-    return all(d < threshold for d in diffs)
+# 辅助函数：角度转弧度
+def degrees_to_radians(degrees):
+    return [math.radians(d) for d in degrees]
 
-# 动态绘制并补偿
-steps = 100
+# 动态绘制
+steps = 50
 
 for i in range(steps):
     ratio = i / steps
@@ -38,21 +38,20 @@ for i in range(steps):
     error = [a - t for a, t in zip(actual[:3], target)]
 
     features = np.array(target + error).reshape(1, -1)
-    angles = [model.predict(features)[0] for model in gpr_models]
+    angles_deg = [model.predict(features)[0] for model in gpr_models]
+    angles_rad = degrees_to_radians(angles_deg)
 
-    mc.send_angles(angles, 40)
-
-    while not is_angles_close(angles):
-        time.sleep(0.01)
+    mc.send_radians(angles_rad, 30)
+    time.sleep(0.05)
 
 # 提笔动作
 final = end_coords[:]
 final[2] += 30
 mc.send_coords(final, 20, 1)
-while not is_angles_close(mc.get_angles()):
-    time.sleep(0.01)
+time.sleep(2)
 
 head.close()
+
 
 
 
