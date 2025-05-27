@@ -37,9 +37,9 @@ def flatten_data(raw_csv=RAW_CSV, flat_csv=FLAT_CSV):
 def train_gpr_models(df, model_dir=MODEL_DIR):
     print("开始训练 GPR 模型...")
     df.dropna(inplace=True)
-    X = df[["x_target", "y_target", "z_target", "x_error", "y_error", "z_error"]].values
+    #X = df[["x_target", "y_target", "z_target", "x_error", "y_error", "z_error"]].values
+    X = df[["x_target", "y_target", "z_target", "x_error"]].values
     Y = df[["j1", "j2", "j3", "j4", "j5", "j6"]].values
-
     for i in range(6):
         kernel = RBF(length_scale=10.0) + WhiteKernel(noise_level=1.0)
         gpr = GaussianProcessRegressor(kernel=kernel, normalize_y=True)
@@ -47,7 +47,6 @@ def train_gpr_models(df, model_dir=MODEL_DIR):
         model_path = os.path.join(model_dir, f"gpr_joint{i+1}.pkl")
         joblib.dump(gpr, model_path)
         print(f"已训练并保存模型: {model_path}")
-
     print("所有 GPR 模型训练完成！")
 
 df = pd.read_csv("flattened_data.csv")
