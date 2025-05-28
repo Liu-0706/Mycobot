@@ -34,6 +34,10 @@ for i in range(steps):
     ratio = i / steps
     target = head.linear_interp(start_coords[:3], end_coords[:3], ratio)
     actual = mc.get_coords()
+    if not actual or len(actual) < 3:
+        print("no data")
+        continue
+
     error = [a - t for a, t in zip(actual[:3], target)]
 
     # 只使用 x_error，拼接到输入特征中
@@ -43,7 +47,7 @@ for i in range(steps):
     angles = [model.predict(features)[0] for model in gpr_models]
     angles_rad = degrees_to_radians(angles)
     mc.send_radians(angles_rad, 20)
-    time.sleep(0.05)
+    #time.sleep(0.05)
 
 # 提笔动作
 final = end_coords[:]
