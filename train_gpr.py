@@ -41,7 +41,7 @@ def train_gpr_models(df, model_dir=MODEL_DIR):
     X = df[["x_target", "y_target", "z_target", "x_error"]].values
     Y = df[["j1", "j2", "j3", "j4", "j5", "j6"]].values
     for i in range(6):
-        kernel = RBF(length_scale=10.0) + WhiteKernel(noise_level=1.0)
+        kernel = RBF(length_scale=3.0) + WhiteKernel(noise_level=0.1)
         gpr = GaussianProcessRegressor(kernel=kernel, normalize_y=True)
         gpr.fit(X, Y[:, i])
         model_path = os.path.join(model_dir, f"gpr_joint{i+1}.pkl")
