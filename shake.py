@@ -1,10 +1,11 @@
-# shake_dynamic_xonly.py
+# shake_dynamic_xonly_kalman.py
 from pymycobot.mycobot import MyCobot
 import time
 import joblib
 import numpy as np
 import math
 import head
+from filterpy.kalman import KalmanFilter
 
 mc = MyCobot('/dev/ttyAMA0', 1000000)
 head.initialize()
@@ -28,6 +29,18 @@ time.sleep(2)
 def degrees_to_radians(degrees):
     return [math.radians(d) for d in degrees]
 
+# 初始化卡尔曼滤波器（6个独立滤波器用于6个关节）
+kf_list = []
+for _ in range(6):
+    kf = KalmanFilter(dim_x=2, dim_z=1)
+    kf.x = np.array([[0.0], [0.0]])
+    kf.F = np.array([[1.0, 1.0], [0.0, 1.0]])
+    kf.H = np.array([[1.0, 0.0]])
+    kf.P *= 1000.0
+    kf.R = 1.0
+    kf.Q = np.array([[1.0, 0.0], [0.0, 1.0]]) * 0.01
+    kf_list.append(kf)
+
 # 动态绘制
 steps = 50
 for i in range(steps):
@@ -39,15 +52,21 @@ for i in range(steps):
         continue
 
     error = [a - t for a, t in zip(actual[:3], target)]
-
-    # 只使用 x_error，拼接到输入特征中
     x_error = error[0]
     features = np.array(target + [x_error]).reshape(1, -1)
 
-    angles = [model.predict(features)[0] for model in gpr_models]
-    angles_rad = degrees_to_radians(angles)
+    raw_angles = [model.predict(features)[0] for model in gpr_models]
+
+    # 应用卡尔曼滤波器
+    filtered_angles = []
+    for idx, angle in enumerate(raw_angles):
+        kf = kf_list[idx]
+        kf.predict()
+        kf.update(angle)
+        filtered_angles.append(kf.x[0, 0])
+
+    angles_rad = degrees_to_radians(filtered_angles)
     mc.send_radians(angles_rad, 20)
-    #time.sleep(0.05)
 
 # 提笔动作
 final = end_coords[:]
@@ -56,6 +75,7 @@ mc.send_coords(final, 20, 1)
 time.sleep(2)
 
 head.close()
+
 
 
 
