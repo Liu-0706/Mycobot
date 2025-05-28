@@ -21,7 +21,7 @@ end_coords = [200, -100, 140, 0, 180, 180]
 elevated = start_coords[:]
 elevated[2] += 40
 mc.send_coords(elevated, 40, 1)
-time.sleep(2)
+time.sleep(3)
 mc.send_coords(start_coords, 20, 1)
 time.sleep(2)
 
@@ -42,7 +42,7 @@ for _ in range(6):
     kf_list.append(kf)
 
 # 动态绘制
-steps = 50
+steps = 20
 for i in range(steps):
     ratio = i / steps
     target = head.linear_interp(start_coords[:3], end_coords[:3], ratio)
@@ -55,7 +55,7 @@ for i in range(steps):
     x_error = error[0]
     features = np.array(target + [x_error]).reshape(1, -1)
 
-    raw_angles = [model.predict(features)[0] for model in gpr_models]
+    raw_angles = [model.predict(features)[0] * 1.03 for model in gpr_models]
 
     # 应用卡尔曼滤波器
     filtered_angles = []
@@ -64,13 +64,14 @@ for i in range(steps):
         kf.predict()
         kf.update(angle)
         filtered_angles.append(kf.x[0, 0])
-
-    angles_rad = degrees_to_radians(filtered_angles)
-    mc.send_radians(angles_rad, 20)
-
+    mc.send_angles(filtered_angles, 20)
+    #angles_rad = degrees_to_radians(filtered_angles)
+    #mc.send_radians(angles_rad, 20)
+    #time.sleep(0.02)
 # 提笔动作
 final = end_coords[:]
 final[2] += 30
+final[0] += 30
 mc.send_coords(final, 20, 1)
 time.sleep(2)
 

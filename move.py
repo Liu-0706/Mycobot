@@ -32,14 +32,25 @@ join_data = []
 
 
 # 1. 移动到初始点
-mc.send_coords(start_coords, 50, 1)
+# 提升安全高度
+elevated = start_coords[:]
+elevated[2] += 40
+mc.send_coords(elevated, 40, 1)
 time.sleep(3)
+mc.send_coords(start_coords, 20, 1)
+time.sleep(2)
 
 mc.send_coords(end_coords, 20, 1)
 time.sleep(3)
 
-actual_end_coords = mc.get_coords()
-angles = mc.get_angles()
+final = end_coords[:]
+final[2] += 30
+final[0] += 30
+mc.send_coords(final, 20, 1)
+time.sleep(2)
+
+#actual_end_coords = mc.get_coords()
+#angles = mc.get_angles()
 
 #save(end_coords, actual_end_coords, angles)
 
