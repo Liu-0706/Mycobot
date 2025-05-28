@@ -1,3 +1,62 @@
+# shake_dynamic_xonly.py
+from pymycobot.mycobot import MyCobot
+import time
+import joblib
+import numpy as np
+import math
+import head
+
+mc = MyCobot('/dev/ttyAMA0', 1000000)
+head.initialize()
+
+# 加载 GPR 模型（只关注 x_error）
+gpr_models = [joblib.load(f"gpr_models/gpr_joint{i+1}.pkl") for i in range(6)]
+
+# 初始和目标点
+start_coords = [200, 100, 140, 0, 180, 180]
+end_coords = [200, -100, 140, 0, 180, 180]
+
+# 提升安全高度
+elevated = start_coords[:]
+elevated[2] += 40
+mc.send_coords(elevated, 40, 1)
+time.sleep(2)
+mc.send_coords(start_coords, 20, 1)
+time.sleep(2)
+
+# 辅助函数：角度转弧度
+def degrees_to_radians(degrees):
+    return [math.radians(d) for d in degrees]
+
+# 动态绘制
+steps = 50
+for i in range(steps):
+    ratio = i / steps
+    target = head.linear_interp(start_coords[:3], end_coords[:3], ratio)
+    actual = mc.get_coords()
+    error = [a - t for a, t in zip(actual[:3], target)]
+
+    # 只使用 x_error，拼接到输入特征中
+    x_error = error[0]
+    features = np.array(target + [x_error]).reshape(1, -1)
+
+    angles = [model.predict(features)[0] for model in gpr_models]
+    angles_rad = degrees_to_radians(angles)
+    mc.send_radians(angles_rad, 20)
+    time.sleep(0.05)
+
+# 提笔动作
+final = end_coords[:]
+final[2] += 30
+mc.send_coords(final, 20, 1)
+time.sleep(2)
+
+head.close()
+
+
+
+"""
+#############################
 # shake_dynamic_kalman.py
 from pymycobot.mycobot import MyCobot
 import time
@@ -68,10 +127,10 @@ for i in range(steps):
 
 
 head.close()
+"""
 
 
-
-
+#####################################
 """
 from pymycobot.mycobot import MyCobot
 import time
