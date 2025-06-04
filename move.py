@@ -4,12 +4,11 @@ import time
 import math
 import csv
 import head
-# 初始化MyCobot（根据你的实际串口修改）
 mc = MyCobot('/dev/ttyAMA0', 1000000)
 
 head.initialize()
 
-# 定义初始点和目标点
+
 """
 start_coords = [120, 20, 140, 0, 180, 180]
 end_coords = [200, 20, 140, 0, 180, 180]
@@ -30,9 +29,6 @@ join_data = []
 #head.record_trajectory(start_coords,end_coords)
 
 
-
-# 1. 移动到初始点
-# 提升安全高度
 elevated = start_coords[:]
 elevated[2] += 40
 mc.send_coords(elevated, 40, 1)
@@ -40,8 +36,8 @@ time.sleep(3)
 mc.send_coords(start_coords, 20, 1)
 time.sleep(2)
 
-mc.send_coords(end_coords, 20, 1)
-time.sleep(3)
+mc.send_coords(end_coords, 15, 1)
+time.sleep(4)
 
 final = end_coords[:]
 final[2] += 30

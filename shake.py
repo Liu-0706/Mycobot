@@ -10,26 +10,27 @@ from filterpy.kalman import KalmanFilter
 mc = MyCobot('/dev/ttyAMA0', 1000000)
 head.initialize()
 
-# 加载 GPR 模型（只关注 x_error）
+# load GPR
 gpr_models = [joblib.load(f"gpr_models/gpr_joint{i+1}.pkl") for i in range(6)]
 
-# 初始和目标点
+
 start_coords = [200, 100, 140, 0, 180, 180]
 end_coords = [200, -100, 140, 0, 180, 180]
 
-# 提升安全高度
+#head.mark_start_and_end_point(start_coords,end_coords)
+
 elevated = start_coords[:]
 elevated[2] += 40
 mc.send_coords(elevated, 40, 1)
 time.sleep(3)
 mc.send_coords(start_coords, 20, 1)
-time.sleep(2)
+time.sleep(3)
 
-# 辅助函数：角度转弧度
+
 def degrees_to_radians(degrees):
     return [math.radians(d) for d in degrees]
 
-# 初始化卡尔曼滤波器（6个独立滤波器用于6个关节）
+
 kf_list = []
 for _ in range(6):
     kf = KalmanFilter(dim_x=2, dim_z=1)
@@ -41,8 +42,7 @@ for _ in range(6):
     kf.Q = np.array([[1.0, 0.0], [0.0, 1.0]]) * 0.01
     kf_list.append(kf)
 
-# 动态绘制
-steps = 20
+steps = 30
 for i in range(steps):
     ratio = i / steps
     target = head.linear_interp(start_coords[:3], end_coords[:3], ratio)
@@ -57,18 +57,19 @@ for i in range(steps):
 
     raw_angles = [model.predict(features)[0] * 1.03 for model in gpr_models]
 
-    # 应用卡尔曼滤波器
+    # use KalmanFilter
     filtered_angles = []
     for idx, angle in enumerate(raw_angles):
         kf = kf_list[idx]
         kf.predict()
         kf.update(angle)
         filtered_angles.append(kf.x[0, 0])
-    mc.send_angles(filtered_angles, 20)
+    mc.send_angles(filtered_angles, 15)
     #angles_rad = degrees_to_radians(filtered_angles)
     #mc.send_radians(angles_rad, 20)
     #time.sleep(0.02)
-# 提笔动作
+
+
 final = end_coords[:]
 final[2] += 30
 final[0] += 30

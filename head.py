@@ -5,12 +5,22 @@ import csv
 import random
 
 mc = MyCobot('/dev/ttyAMA0', 1000000)
-
+"""
 def close():
     mc.send_coords([60.5, 21.0, 161.0, -143.89, -30.94, 38.33], 30, 1)
     time.sleep(3)
     print("power off")
     mc.power_off()
+"""
+def close():
+    mc.send_angles([80.33, 142.73, -150.38, -26.19, -0.7, -133.33], 30)
+    time.sleep(4)
+    print("power off")
+    mc.power_off()
+
+def move_to_start():
+    mc.send_angles([80.33, 142.73, -150.38, -26.19, -0.7, -133.33], 30)
+    time.sleep(4)
 
 def initialize():
     mc.power_on()
@@ -81,3 +91,22 @@ def is_angles_close(target_angles, threshold=2.0):
     current_angles = mc.get_angles()
     diffs = [abs(c - t) for c, t in zip(current_angles, target_angles)]
     return all(d < threshold for d in diffs)
+
+def mark_start_and_end_point(start_coords, end_coords):
+    elevated = start_coords[:]
+    elevated[2] += 40
+    mc.send_coords(elevated, 40, 1)
+    time.sleep(3)
+    mc.send_coords(start_coords, 20, 1)
+    time.sleep(3)
+    move_to_start()
+
+    elevated = end_coords[:]
+    elevated[2] += 40
+    mc.send_coords(elevated, 40, 1)
+    time.sleep(3)
+    mc.send_coords(end_coords, 20, 1)
+    time.sleep(3)
+    move_to_start()
+
+
