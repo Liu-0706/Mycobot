@@ -110,17 +110,14 @@ def calculate_deviation_from_ab_line(contour):
     if len(points.shape) != 2 or points.shape[0] < 2:
         return float('inf')
     
-    # 取首尾点作为目标直线A-B的两个端点
     A = points[0]
     B = points[-1]
     
-    # 定义直线AB
     AB = B - A
     AB_norm = np.linalg.norm(AB)
     if AB_norm == 0:
         return float('inf')
 
-    # 计算所有点到AB直线的距离
     distances = []
     for P in points:
         AP = P - A
@@ -137,11 +134,9 @@ def process_image(image_path):
     if not contours:
         return float('inf')
     
-    # 使用最大轮廓
     main_contour = max(contours, key=cv2.contourArea)
     return calculate_deviation_from_ab_line(main_contour)
 
-# 处理两个图像
 error_shake = process_image("shake.jpg")
 error_move = process_image("move.jpg")
 

@@ -12,9 +12,8 @@ def list_cameras(max_cameras=5):
 
 list_cameras()
 """
-cap = cv2.VideoCapture(0)  # 注意这里是1，不是默认0
+cap = cv2.VideoCapture(0)
 
-# 设置分辨率为 1280x720（720p）
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 

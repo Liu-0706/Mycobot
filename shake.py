@@ -95,14 +95,11 @@ from filterpy.kalman import KalmanFilter
 mc = MyCobot('/dev/ttyAMA0', 1000000)
 head.initialize()
 
-# 加载 GPR 模型
 gpr_models = [joblib.load(f"gpr_models/gpr_joint{i+1}.pkl") for i in range(6)]
 
-# 初始和目标点
 start_coords = [200, 100, 140, 0, 180, 180]
 end_coords = [200, -100, 140, 0, 180, 180]
 
-# 提升安全高度
 elevated = start_coords[:]
 elevated[2] += 40
 mc.send_coords(elevated, 40, 1)
@@ -110,23 +107,20 @@ time.sleep(2)
 mc.send_coords(start_coords, 20, 1)
 time.sleep(2)
 
-# 辅助函数：角度转弧度
 def degrees_to_radians(degrees):
     return [math.radians(d) for d in degrees]
 
-# 初始化卡尔曼滤波器（6个独立滤波器用于6个关节）
 kf_list = []
 for _ in range(6):
     kf = KalmanFilter(dim_x=2, dim_z=1)
-    kf.x = np.array([[0.0], [0.0]])  # 初始状态：位置和速度
-    kf.F = np.array([[1.0, 1.0], [0.0, 1.0]])  # 状态转移矩阵
-    kf.H = np.array([[1.0, 0.0]])  # 观测矩阵
-    kf.P *= 1000.0  # 初始协方差
-    kf.R = 1.0  # 测量噪声
-    kf.Q = np.array([[1.0, 0.0], [0.0, 1.0]]) * 0.01  # 过程噪声
+    kf.x = np.array([[0.0], [0.0]])
+    kf.F = np.array([[1.0, 1.0], [0.0, 1.0]])
+    kf.H = np.array([[1.0, 0.0]])
+    kf.P *= 1000.0
+    kf.R = 1.0
+    kf.Q = np.array([[1.0, 0.0], [0.0, 1.0]]) * 0.01
     kf_list.append(kf)
 
-# 动态绘制
 steps = 50
 
 for i in range(steps):
@@ -138,7 +132,6 @@ for i in range(steps):
     features = np.array(target + error).reshape(1, -1)
     raw_angles = [model.predict(features)[0] for model in gpr_models]
 
-    # 卡尔曼滤波处理
     filtered_angles = []
     for idx, angle in enumerate(raw_angles):
         kf = kf_list[idx]

@@ -52,7 +52,7 @@ def random_point(point, max_jitter=10):
     #end[0] +=  random.uniform(-max_jitter,max_jitter)
     #eturn end
 
-#对两个向量（如坐标）进行线性插值
+#Linear interpolation of two vectors
 def linear_interp(start, end, ratio):
     return [s + (e - s) * ratio for s, e in zip(start, end)]
 
