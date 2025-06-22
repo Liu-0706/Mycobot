@@ -61,7 +61,7 @@ def visualize_and_compute_deviation(image_path, save_path):
 
 
 score_move = visualize_and_compute_deviation("move.jpg", "vis_move_scored.jpg")
-score_shake = visualize_and_compute_deviation("shake.jpg", "vis_shake_scored.jpg")
+score_shake = visualize_and_compute_deviation("move_gpr.jpg", "vis_move_gpr_scored.jpg")
 print(f"move.jpg: {score_move}%")
 print(f"shake.jpg: {score_shake}%")
 
