@@ -51,6 +51,8 @@ for i in range(steps):
         print("no data")
         continue
 
+    #e = np.array(actual) - np.array(curent)
+
     error = [a - t for a, t in zip(actual[:3], target)]
     x_error = error[0]
     features = np.array(target + [x_error]).reshape(1, -1)
