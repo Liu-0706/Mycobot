@@ -13,13 +13,13 @@ def close():
     mc.power_off()
 """
 def close():
-    mc.send_angles([80.33, 142.73, -150.38, -26.19, -0.7, -133.33], 30)
+    mc.send_angles([92.46, 141.94, -151.25, -24.52, 4.57, 46.66], 30)
     time.sleep(4)
     print("power off")
     mc.power_off()
 
 def move_to_start():
-    mc.send_angles([80.33, 142.73, -150.38, -26.19, -0.7, -133.33], 30)
+    mc.send_angles([92.46, 141.94, -151.25, -24.52, 4.57, 46.66], 30)
     time.sleep(4)
 
 def initialize():
@@ -80,12 +80,12 @@ def record_trajectory(start, end, steps=15, interval=0.1):
         row = expected + error + joints
         data.append(row)
 
-        time.sleep(interval)
+        #time.sleep(interval)
     end[0] += 20
     end[2] += 40
     mc.send_coords(end, 20, 1)
     time.sleep(2)
-    save_csv(data,"data_new.csv")
+    save_csv(data,"data_1.csv")
 
 def is_angles_close(target_angles, threshold=2.0):
     current_angles = mc.get_angles()

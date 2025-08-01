@@ -2,12 +2,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-file_path = 'flattened_data.csv'
+file_path = 'flattened_1.csv'
 df = pd.read_csv(file_path)
 
 
 group_size = 15
 num_groups = len(df) // group_size
+print("len(df)",len(df))
 print("num_groups ",num_groups+1)
 
 
