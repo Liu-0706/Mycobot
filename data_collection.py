@@ -8,7 +8,7 @@ mc = MyCobot('/dev/ttyAMA0', 1000000)
 
 head.initialize()
 
-for _ in range(200):
+for _ in range(5):
     start_coords = [200, 100, 140, 0, 180, 180]
     start_coords = head.random_point(start_coords)
     print("start_coords",start_coords)
