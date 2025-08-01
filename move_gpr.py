@@ -11,11 +11,11 @@ mc = MyCobot('/dev/ttyAMA0', 1000000)
 head.initialize()
 
 # load GPR
-gpr_models = [joblib.load(f"gpr_models/gpr_joint{i+1}.pkl") for i in range(6)]
+gpr_models = [joblib.load(f"gpr_models_1/gpr_joint{i+1}.pkl") for i in range(6)]
 
 
-start_coords = [200, 100, 140, 0, 180, 180]
-end_coords = [200, -100, 140, 0, 180, 180]
+start_coords = [200, 100, 140, -180, 0, 0]
+end_coords = [200, -100, 140, -180, 0, 0]
 
 #head.mark_start_and_end_point(start_coords,end_coords)
 
@@ -47,6 +47,8 @@ for i in range(steps):
     ratio = i / steps
     target = head.linear_interp(start_coords[:3], end_coords[:3], ratio)
     actual = mc.get_coords()
+    #target = [200, actual[1], 140]
+    print(actual,target)
     if not actual or len(actual) < 3:
         print("no data")
         continue
@@ -57,19 +59,22 @@ for i in range(steps):
     x_error = error[0]
     features = np.array(target + [x_error]).reshape(1, -1)
 
-    raw_angles = [model.predict(features)[0] * 1.03 for model in gpr_models]
-
+    raw_angles = [model.predict(features)[0] for model in gpr_models]
+    mc.send_angles(raw_angles, 15)
     # use KalmanFilter
-    filtered_angles = []
+    """filtered_angles = []
     for idx, angle in enumerate(raw_angles):
         kf = kf_list[idx]
         kf.predict()
         kf.update(angle)
         filtered_angles.append(kf.x[0, 0])
     mc.send_angles(filtered_angles, 15)
-    #angles_rad = degrees_to_radians(filtered_angles)
-    #mc.send_radians(angles_rad, 20)
-    #time.sleep(0.02)
+    """
+    """
+    angles_rad = degrees_to_radians(filtered_angles)
+    mc.send_radians(angles_rad, 20)
+    time.sleep(0.02)
+    """
 
 
 final = end_coords[:]

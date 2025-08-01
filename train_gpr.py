@@ -8,9 +8,9 @@ import joblib
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, WhiteKernel
 
-RAW_CSV = "data_new.csv"
-FLAT_CSV = "flattened_data.csv"
-MODEL_DIR = "gpr_models"
+RAW_CSV = "data_1.csv"
+FLAT_CSV = "flattened_1.csv"
+MODEL_DIR = "gpr_models_1"
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 def flatten_data(raw_csv=RAW_CSV, flat_csv=FLAT_CSV):
@@ -38,13 +38,13 @@ def train_gpr_models(df, model_dir=MODEL_DIR):
     X = df[["x_target", "y_target", "z_target", "x_error"]].values
     Y = df[["j1", "j2", "j3", "j4", "j5", "j6"]].values
     for i in range(6):
-        kernel = RBF(length_scale=2.0) + WhiteKernel(noise_level=0.1)
+        kernel = RBF(length_scale=5.0) + WhiteKernel(noise_level=0.1)
         gpr = GaussianProcessRegressor(kernel=kernel, normalize_y=True)
         gpr.fit(X, Y[:, i])
         model_path = os.path.join(model_dir, f"gpr_joint{i+1}.pkl")
         joblib.dump(gpr, model_path)
 
-df = pd.read_csv("flattened_data.csv")
+df = pd.read_csv(FLAT_CSV)
 train_gpr_models(df)
 """
 import pandas as pd

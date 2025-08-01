@@ -6,7 +6,7 @@ file_path = 'flattened_1.csv'
 df = pd.read_csv(file_path)
 
 
-group_size = 15
+group_size = 17
 num_groups = len(df) // group_size
 print("len(df)",len(df))
 print("num_groups ",num_groups+1)
@@ -24,7 +24,7 @@ for i in range(num_groups):
 
 plt.xlabel('Absolute Distance from Group Start (|y_target - y0|)')
 plt.ylabel('x_error')
-plt.title('x_error vs. Absolute y_target Distance (15-point segments)')
+plt.title('x_error vs. Absolute y_target Distance (17-point segments)')
 plt.grid(True)
 plt.legend()
 plt.tight_layout()

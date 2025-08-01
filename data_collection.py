@@ -8,13 +8,13 @@ mc = MyCobot('/dev/ttyAMA0', 1000000)
 
 head.initialize()
 
-for _ in range(5):
+for _ in range(20):
     start_coords = [200, 100, 140, 0, 180, 180]
-    start_coords = head.random_point(start_coords)
+    #start_coords = head.random_point(start_coords)
     print("start_coords",start_coords)
 
     end_coords = [200, -100, 140, 0, 180, 180]
-    end_coords = head.random_point(end_coords)
+    #end_coords = head.random_point(end_coords)
     print("end_coords",end_coords)
 
     head.record_trajectory(start_coords,end_coords)
